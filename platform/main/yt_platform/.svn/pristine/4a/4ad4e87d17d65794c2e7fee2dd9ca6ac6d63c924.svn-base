@@ -1,0 +1,76 @@
+package com.san.platform.hikface.main;
+import com.san.platform.face.FaceServer;
+import com.san.platform.hikface.main.ISAPI.DemoISAPI;
+
+/**
+ * 人脸服务器暴露接口
+ */
+public class HkFaceInterface {
+
+
+    public static DemoISAPI inst = null;
+    /**
+     * 脸谱服务器登陆验证
+     * @param faceServer
+     * @return
+     */
+    public static boolean faceLogin (FaceServer faceServer) {
+        boolean isLogin = false;
+        inst = new DemoISAPI(faceServer.getFaceServerIp(), faceServer.getFaceServerPort(), faceServer.getFaceUserName(), faceServer.getFaceUserPwd());
+        // 登录验证
+        isLogin = inst.login();
+        return isLogin;
+    }
+    /***
+     * @param faceInfo   人脸信息
+     * @param faceType   选择请求方法（1：创建人脸库 2：人脸库检索 3：人脸添加到人脸库 4：人脸分析 5：人脸库以图搜图）
+     * @return
+     */
+    public static String FaceApi(String faceInfo, int faceType) {
+        String result = "";
+        String url = "";  // 脸谱api方法  url
+        String method = ""; // 脸谱api方法 请求方式
+        // 调用脸谱方法
+        switch (faceType) {
+            case 1:
+                // 创建人脸库
+                url = "/ISAPI/Intelligent/FDLib?format=json";
+                method = "POST";
+                break;
+            case 2:
+                // 人脸库检索
+                url = "/ISAPI/Intelligent/FDLib?format=json&FDID=1&faceLibType=blackFD";
+                method = "GET";
+                break;
+            case 3:
+                // 添加人脸
+                url = "/ISAPI/Intelligent/FDLib/FaceDataRecord?format=json";
+                method = "POST";
+                break;
+            case 4:
+                // 人脸分析
+                url = "/ISAPI/SDT/Face/pictureAnalysis";
+                method = "POST";
+                break;
+            case 5:
+                // 人脸库以图搜图
+                url = "/ISAPI/Intelligent/FDLib/searchByPic?format=json";
+                method = "POST";
+                break;
+            case 6:
+                // 查询人脸
+                url = "/ISAPI/Intelligent/FDLib/FDSearch?format=json";
+                method = "POST";
+                break;
+            case 7:
+                // 修改人脸
+                url = "/ISAPI/Intelligent/FDLib/FDSearch?format=json&FDID=fdid&FPID=9b8434b5fcf340d0a53c0826931c1fb4&faceLibType=blackFD";
+                method = "PUT";
+                break;
+        }
+        // 接口执行
+        result = inst.excute(url, method, faceInfo);
+
+        return result;
+    }
+}

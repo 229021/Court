@@ -1,0 +1,283 @@
+package com.san.platform.personnel.service.impl;
+
+import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.san.platform.alert.PersonType;
+import com.san.platform.alert.mapper.PersonTypeMapper;
+import com.san.platform.config.Global;
+import com.san.platform.personnel.Personnel;
+import com.san.platform.personnel.PersonnelService;
+import com.san.platform.personnel.PicturePath;
+import com.san.platform.personnel.mapper.PersonnelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
+
+@Service
+public class PersonnelServiceImpl implements PersonnelService {
+
+    @Autowired
+    private PersonnelMapper personnelMapper;
+    @Autowired
+    private PersonTypeMapper personTypeMapper;
+    private final static String XLS = "xls";
+    private final static String XLSX = "xlsx";
+    private final static String CSV = "csv";
+
+    @Override
+    public HashMap<String, Object> queryPersonnel(Personnel personnel) {
+        HashMap<String, Object> map = new HashMap<>();
+        // 当前页码 pageNum 与 每页显示条数 pageSize分页
+        PageHelper.startPage(personnel.getPageNum(), Global.PAGESIZE);
+        // 分页查询
+        List<Personnel> userList = personnelMapper.queryPersonnel(personnel);
+        // 得到page相关的info
+        PageInfo pageInfo = new PageInfo(userList);
+        // 将list与相关的page信息传入map到web端
+        map.put("pages", new Integer(pageInfo.getPages()));
+        map.put("total", pageInfo.getTotal());
+        map.put("results", userList);
+        return map;
+    }
+
+/*    @Override
+    public List<Personnel> queryPersonnel(Personnel personnel) {
+        return personnelMapper.queryPersonnel(personnel);
+    }*/
+
+
+    @Override
+    public Personnel queryPersonnelByNumber(Personnel personnel) {
+        return personnelMapper.queryPersonnelByNumber(personnel);
+    }
+
+    @Override
+    public Personnel queryPersonnelByNumberTongYong(Personnel personnel) {
+        return personnelMapper.queryPersonnelByNumber(personnel);
+    }
+
+    @Override
+    public List<Personnel> queryPersonnels(Personnel perType) {
+      /*  String time = DateUtil.putDateToTimeStr10(new Date());
+        personnel.setTodayDate(time);*/
+        return personnelMapper.queryPersonnels(perType);
+    }
+
+    @Override
+    public List<Personnel> queryPersonnelPage(List<Integer> perIds, Integer perType) {
+        ArrayList<Personnel> personnelArrayList = new ArrayList<>();
+        // 将前端传过来的所有id遍历并add到list里
+        for (Integer id : perIds) {
+            Personnel personnel = new Personnel();
+            personnel.setPerId(id);
+            personnelArrayList.add(personnelMapper.queryPersonnelByIds(personnel));
+        }
+        return personnelArrayList;
+    }
+
+    @Override
+    public List<Personnel> queryPersonnelReset(Personnel personnel) {
+        return personnelMapper.queryPersonnelReset(personnel);
+    }
+
+    @Override
+    public HashMap<String, Object> queryTroublePersonnel(Personnel personnel) {
+        HashMap<String, Object> map = new HashMap<>();
+        // 当前页码 pageNum 与 每页显示条数 pageSize分页
+        PageHelper.startPage(personnel.getPageNum(), Global.PAGESIZE);
+        // 分页查询
+        List<Personnel> userList = personnelMapper.queryTroublePersonnel(personnel);
+        // 得到page相关的info
+        PageInfo pageInfo = new PageInfo(userList);
+        // 将list与相关的page信息传入map到web端
+        map.put("pages", new Integer(pageInfo.getPages()));
+        map.put("total", pageInfo.getTotal());
+        map.put("results", userList);
+        return map;
+    }
+
+    @Override
+    public Personnel selectTroublePersonnel(Personnel personnel) {
+        return personnelMapper.selectTroublePersonnel(personnel);
+    }
+
+    @Override
+    public HashMap<String, Object> queryLowCreditPersonnel(Personnel personnel) {
+        HashMap<String, Object> map = new HashMap<>();
+        // 当前页码 pageNum 与 每页显示条数 pageSize分页
+        PageHelper.startPage(personnel.getPageNum(), Global.PAGESIZE);
+        // 分页查询
+        List<Personnel> userList = personnelMapper.queryLowCreditPersonnel(personnel);
+        // 得到page相关的info
+        PageInfo pageInfo = new PageInfo(userList);
+        // 将list与相关的page信息传入map到web端
+        map.put("pages", new Integer(pageInfo.getPages()));
+        map.put("total", pageInfo.getTotal());
+        map.put("results", userList);
+        return map;
+    }
+
+    @Override
+    public HashMap<String, Object> querySpecialPersonnel(Personnel personnel) {
+        HashMap<String, Object> map = new HashMap<>();
+        // 当前页码 pageNum 与 每页显示条数 pageSize分页
+        PageHelper.startPage(personnel.getPageNum(), Global.PAGESIZE);
+        // 分页查询
+        List<Personnel> userList = personnelMapper.querySpecialPersonnel(personnel);
+        // 得到page相关的info
+        PageInfo pageInfo = new PageInfo(userList);
+        // 将list与相关的page信息传入map到web端
+        map.put("pages", new Integer(pageInfo.getPages()));
+        map.put("total", pageInfo.getTotal());
+        map.put("results", userList);
+        return map;
+    }
+
+    @Override
+    public HashMap<String, Object> queryStaffPersonnel(Personnel personnel) {
+        HashMap<String, Object> map = new HashMap<>();
+        // 当前页码 pageNum 与 每页显示条数 pageSize分页
+        PageHelper.startPage(personnel.getPageNum(), Global.PAGESIZE);
+        // 分页查询
+        List<Personnel> userList = personnelMapper.queryStaffPersonnel(personnel);
+        // 得到page相关的info
+        PageInfo pageInfo = new PageInfo(userList);
+        // 将list与相关的page信息传入map到web端
+        map.put("pages", new Integer(pageInfo.getPages()));
+        map.put("total", pageInfo.getTotal());
+        map.put("results", userList);
+        return map;
+    }
+
+    @Override
+    public HashMap<String, Object> queryCustomizePersonnel(Personnel personnel) {
+        HashMap<String, Object> map = new HashMap<>();
+        // 当前页码 pageNum 与 每页显示条数 pageSize分页
+        PageHelper.startPage(personnel.getPageNum(), Global.PAGESIZE);
+        // 分页查询
+        List<Personnel> userList = personnelMapper.queryCustomizePersonnel(personnel);
+        // 得到page相关的info
+        PageInfo pageInfo = new PageInfo(userList);
+        // 将list与相关的page信息传入map到web端
+        map.put("pages", new Integer(pageInfo.getPages()));
+        map.put("total", pageInfo.getTotal());
+        map.put("results", userList);
+        return map;
+    }
+
+    @Override
+    public void updatePersonnel(Personnel personnel) {
+        personnelMapper.updateByPrimaryKeySelective(personnel);
+    }
+
+    @Override
+    public void createPersonnel(Personnel personnel) {
+        personnelMapper.createPersonnel(personnel);
+    }
+
+    @Override
+    public void removePersonnel(Integer perId) {
+        personnelMapper.removePersonnel(perId);
+    }
+
+    @Override
+    public void removePersonnelTongYong(Integer perIds) {
+        personnelMapper.deleteByPrimaryKey(perIds);
+    }
+
+    /*    @Override
+        public Personnel queryPersonnelById(Personnel personnel) {
+            return personnelMapper.selectOne(personnel);
+        }*/
+    @Override
+    public Personnel queryPersonnelById(Personnel personnel) {
+        return personnelMapper.queryPersonnelById(personnel);
+    }
+
+    @Override
+    public void updatePersonnelType(Personnel personnel) {
+        personnelMapper.updatePersonnelType(personnel);
+    }
+
+    @Override
+    public void importPersonnel(Personnel personnel) {
+        personnelMapper.importPersonnel(personnel);
+
+    }
+
+    @Override
+    public void savePicturePath(PicturePath picturePath) {
+        personnelMapper.savePicturePath(picturePath);
+    }
+
+    @Override
+    public List<String> queryPicPath() {
+        return personnelMapper.queryPicPath();
+    }
+
+    @Override
+    public List<String> queryPersonnelByTypes(List<Integer> perIds, Integer perType) {
+        List<String> personnelArrayList = new ArrayList<>();
+        // 将前端传过来的所有id遍历并add到list里
+        for (Integer id : perIds) {
+            personnelArrayList.add(personnelMapper.queryPersonnelByTypes(id, perType));
+        }
+        return personnelArrayList;
+    }
+
+    @Override
+    public List<String> queryPersonnelByTypeAll(Integer perType) {
+        return personnelMapper.queryPersonnelByTypeAll(perType);
+    }
+
+
+    @Override
+    public List<PersonType> queryCustomize(Integer typeSign) {
+        return personTypeMapper.queryCustomize(typeSign);
+    }
+
+    @Override
+    public int createCustomize(PersonType personType) {
+        return personTypeMapper.insertSelective(personType);
+    }
+
+    @Override
+    public int updateCustomize(PersonType personType) {
+        return personTypeMapper.updateByPrimaryKeySelective(personType);
+    }
+
+    @Override
+    public int deleteCustomizeById(PersonType personType) {
+        return personTypeMapper.deleteByPrimaryKey(personType);
+    }
+
+    @Override
+    public int deleteCustomizeByIds(Integer personTypeId) {
+        return personTypeMapper.deleteByPrimaryKey(personTypeId);
+    }
+
+    @Override
+    public PersonType queryPersonTypeById(PersonType personType) {
+        return personTypeMapper.selectByPrimaryKey(personType);
+    }
+
+    /**
+     * 根据人员类型查询所有的人员信息
+     * @param type
+     * @return
+     */
+    @Override
+    public List<Personnel> queryAllByType (Integer type){
+        return personnelMapper.queryAllByType(type);
+    }
+
+    /**
+     * 根据证件号查询人员数
+     * @param perNumber
+     * @return
+     */
+    public int queryCountByNumber(String perNumber){
+        return personnelMapper.queryCountByNumber(perNumber);
+    }
+}

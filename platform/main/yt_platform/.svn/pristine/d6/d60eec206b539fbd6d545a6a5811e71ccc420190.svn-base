@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.personnel.mapper.PersonnelMapper">
+
+    <select id="selectTroublePersonnel" parameterType="com.san.platform.personnel.Personnel" resultType="com.san.platform.personnel.Personnel">
+        SELECT
+        a.perId,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.createDate
+        FROM
+        tbl_personnel a
+        <where>
+            a.perType = 0
+            AND
+            a.perNumber = #{perNumber}
+        </where>
+    </select>
+
+    <resultMap id="TblPersonnel" type="com.san.platform.personnel.Personnel" autoMapping="true">
+    </resultMap>
+    <select id="queryPersonnel"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultMap="TblPersonnel">
+        SELECT
+        a.perId,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.createDate,
+        a.lawyerCard
+        FROM
+        tbl_personnel a
+        <where>
+            <if test="perName != null and perName != ''">
+                AND a.perName like CONCAT('%', #{perName}, '%')
+            </if>
+            <if test="perNumber != null and perNumber != ''">
+                AND a.perNumber like CONCAT('%', #{perNumber}, '%')
+            </if>
+            <if test="perAddress != null and perAddress != ''">
+                AND a.perAddress like CONCAT('%', #{perAddress}, '%')
+            </if>
+            <if test="perNation != null and perNation != ''">
+                AND a.perNation like CONCAT('%', #{perNation}, '%')
+            </if>
+            AND a.perType = -1
+        </where>
+        ORDER BY a.createDate DESC
+    </select>
+
+    <select id="queryPersonnels"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultType="com.san.platform.personnel.Personnel">
+        SELECT
+        a.perId,
+        a.perUUID,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.lawyerCard,
+        a.updateDate,
+        a.createDate
+        FROM
+        tbl_personnel a
+        <where>
+            <if test="perType != null and perType != ''">
+            a.perType = #{perType}
+            </if>
+        </where>
+        ORDER BY a.createDate DESC
+    </select>
+    <select id="queryPersonnelByIds"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultType="com.san.platform.personnel.Personnel">
+        SELECT
+        a.perId,
+        a.perUUID,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.lawyerCard,
+        a.updateDate,
+        a.createDate
+        FROM
+        tbl_personnel a
+        WHERE
+        a.perId = #{perId}
+        ORDER BY a.createDate DESC
+    </select>
+    <select id="queryPersonnelByNumber"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultType="com.san.platform.personnel.Personnel">
+        SELECT
+        a.perId,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.createDate
+        FROM
+        tbl_personnel a
+        <where>
+            <if test="perNumber != null and perNumber != ''">
+                a.perNumber = #{perNumber}
+            </if>
+        </where>
+        ORDER BY a.createDate DESC limit 1
+    </select>
+
+    <resultMap id="TroublePersonnel" type="com.san.platform.personnel.Personnel" autoMapping="true">
+    </resultMap>
+    <select id="queryTroublePersonnel"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultMap="TroublePersonnel">
+
+        SELECT
+        a.perId,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.createDate
+        FROM
+        tbl_personnel a
+        <where>
+            <if test="perName != null and perName != ''">
+                AND a.perName like CONCAT('%', #{perName}, '%')
+            </if>
+            <if test="perNumber != null and perNumber != ''">
+                AND a.perNumber like CONCAT('%', #{perNumber}, '%')
+            </if>
+            <if test="perAddress != null and perAddress != ''">
+                AND a.perAddress like CONCAT('%', #{perAddress}, '%')
+            </if>
+            <if test="perNation != null and perNation != ''">
+                AND a.perNation like CONCAT('%', #{perNation}, '%')
+            </if>
+            AND a.perType = #{perType}
+
+        </where>
+        ORDER BY a.createDate DESC
+    </select>
+
+
+    <resultMap id="LowCredit" type="com.san.platform.personnel.Personnel" autoMapping="true">
+    </resultMap>
+    <select id="queryLowCreditPersonnel"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultMap="LowCredit">
+
+        SELECT
+        a.perId,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.createDate
+        FROM
+        tbl_personnel a
+        <where>
+            <if test="perName != null and perName != ''">
+                AND a.perName like CONCAT('%', #{perName}, '%')
+            </if>
+            <if test="perNumber != null and perNumber != ''">
+                AND a.perNumber like CONCAT('%', #{perNumber}, '%')
+            </if>
+            <if test="perAddress != null and perAddress != ''">
+                AND a.perAddress like CONCAT('%', #{perAddress}, '%')
+            </if>
+            <if test="perNation != null and perNation != ''">
+                AND a.perNation like CONCAT('%', #{perNation}, '%')
+            </if>
+            AND a.perType = #{perType}
+
+        </where>
+        ORDER BY a.createDate DESC
+    </select>
+    <resultMap id="Special" type="com.san.platform.personnel.Personnel" autoMapping="true">
+    </resultMap>
+
+    <select id="querySpecialPersonnel"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultMap="Special">
+
+        SELECT
+        a.perId,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.createDate
+        FROM
+        tbl_personnel a
+        <where>
+            <if test="perName != null and perName != ''">
+                AND a.perName like CONCAT('%', #{perName}, '%')
+            </if>
+            <if test="perNumber != null and perNumber != ''">
+                AND a.perNumber like CONCAT('%', #{perNumber}, '%')
+            </if>
+            <if test="perAddress != null and perAddress != ''">
+                AND a.perAddress like CONCAT('%', #{perAddress}, '%')
+            </if>
+            <if test="perNation != null and perNation != ''">
+                AND a.perNation like CONCAT('%', #{perNation}, '%')
+            </if>
+            AND a.perType = #{perType}
+
+        </where>
+        ORDER BY a.createDate DESC
+    </select>
+    <resultMap id="Staff" type="com.san.platform.personnel.Personnel" autoMapping="true">
+    </resultMap>
+
+    <select id="queryStaffPersonnel"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultMap="Staff">
+        SELECT
+        a.perId,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.createDate
+        FROM
+        tbl_personnel a
+        <where>
+            <if test="perName != null and perName != ''">
+                AND a.perName like CONCAT('%', #{perName}, '%')
+            </if>
+            <if test="perNumber != null and perNumber != ''">
+                AND a.perNumber like CONCAT('%', #{perNumber}, '%')
+            </if>
+            <if test="perAddress != null and perAddress != ''">
+                AND a.perAddress like CONCAT('%', #{perAddress}, '%')
+            </if>
+            <if test="perNation != null and perNation != ''">
+                AND a.perNation like CONCAT('%', #{perNation}, '%')
+            </if>
+            AND a.perType = #{perType}
+
+        </where>
+        ORDER BY a.createDate DESC
+    </select>
+
+    <select id="queryCustomizePersonnel"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultType="com.san.platform.personnel.Personnel">
+        SELECT
+        a.perId,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.createDate
+        FROM
+        tbl_personnel a
+        <where>
+            <if test="perName != null and perName != ''">
+                AND a.perName like CONCAT('%', #{perName}, '%')
+            </if>
+            <if test="perNumber != null and perNumber != ''">
+                AND a.perNumber like CONCAT('%', #{perNumber}, '%')
+            </if>
+            <if test="perAddress != null and perAddress != ''">
+                AND a.perAddress like CONCAT('%', #{perAddress}, '%')
+            </if>
+            <if test="perNation != null and perNation != ''">
+                AND a.perNation like CONCAT('%', #{perNation}, '%')
+            </if>
+            AND a.perType = #{perType}
+
+        </where>
+        ORDER BY a.createDate DESC
+    </select>
+
+    <insert id="createPersonnel">
+      INSERT  INTO tbl_personnel(
+            perId,
+            perUUID,
+            perName,
+            perIDType,
+            perNumber,
+            perStatus,
+            perBirthDate,
+            perSex,
+            perNation,
+            perPhone,
+            perAddress,
+            perCarNumber,
+            perPicture,
+            perType,
+            perMemo,
+            lawyerCard,
+            updateDate,
+            createDate
+		) VALUES (
+            #{perId},
+            #{perUUID},
+            #{perName},
+            #{perIDType},
+            #{perNumber},
+            #{perStatus},
+            #{perBirthDate},
+            #{perSex},
+            #{perNation},
+            #{perPhone},
+            #{perAddress},
+            #{perCarNumber},
+            #{perPicture},
+            #{perType},
+            #{perMemo},
+            #{lawyerCard},
+            #{updateDate},
+            #{createDate}
+		)
+    </insert>
+
+    <delete id="removePersonnel">
+        DELETE
+        FROM tbl_personnel
+        <where>
+            <if test=" perId != null and perId != ''">
+                AND perId = #{perId}
+            </if>
+        </where>
+    </delete>
+
+    <update id="updatePersonnelType">
+        UPDATE
+        tbl_personnel
+        SET
+            perId = #{perId},
+            perType = #{perType}
+        where
+              perId = #{perId}
+    </update>
+
+    <select id="queryPersonnelReset"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultType="com.san.platform.personnel.Personnel">
+        SELECT
+        a.perId,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.createDate
+        FROM
+        tbl_personnel a
+        where
+             a.perType = #{perType}
+        ORDER BY a.createDate DESC
+    </select>
+    <select id="queryPersonnelById"
+            parameterType="com.san.platform.personnel.Personnel"
+            resultType="com.san.platform.personnel.Personnel">
+        SELECT
+        a.perId,
+        a.perName,
+        a.perIDType,
+        a.perNumber,
+        a.perStatus,
+        a.perBirthDate,
+        a.perSex,
+        a.perNation,
+        a.perPhone,
+        a.perAddress,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType,
+        a.perMemo,
+        a.createDate,
+        a.lawyerCard
+        FROM
+        tbl_personnel a
+        where
+        <if test="perId != null and perId != ''">
+            a.perId = #{perId}
+        </if>
+    </select>
+    <insert id="importPersonnel">
+        INSERT  INTO tbl_personnel(
+        perId,
+        perUUID,
+        perName,
+        perIDType,
+        perNumber,
+        perStatus,
+        perBirthDate,
+        perSex,
+        perNation,
+        perPhone,
+        perAddress,
+        perCarNumber,
+        perPicture,
+        perType,
+        perMemo,
+        updateDate,
+        createDate,
+        lawyerCard
+        ) VALUES (
+        #{perId},
+        #{perUUID},
+        #{perName},
+        #{perIDType},
+        #{perNumber},
+        #{perStatus},
+        #{perBirthDate},
+        #{perSex},
+        #{perNation},
+        #{perPhone},
+        #{perAddress},
+        #{perCarNumber},
+        #{perPicture},
+        #{perType},
+        #{perMemo},
+        #{updateDate},
+        #{createDate},
+        #{lawyerCard}
+        )
+    </insert>
+    <insert id="savePicturePath">
+        INSERT into tbl_picPath(
+         pathId,
+         picturePath,
+         createDate,
+         updateDate
+        )VALUES (
+        #{pathId},
+        #{picturePath},
+        #{createDate},
+        #{updateDate}
+        )
+    </insert>
+    <select id="queryPersonnelByTypes"
+            resultType="String">
+        SELECT
+        a.perPicture
+        FROM
+        tbl_personnel a
+
+        where
+            a.perType = #{perType}
+            AND a.perId = #{perId}
+        ORDER BY a.createDate DESC
+    </select>
+    <select id="queryPersonnelByTypeAll"
+            resultType="String">
+        SELECT
+        a.perPicture
+        FROM
+        tbl_personnel a
+        where
+        a.perType = #{perType}
+        ORDER BY a.createDate DESC
+    </select>
+
+    <!--根据type类型查询人员信息-->
+    <select id="queryAllByType" resultType="com.san.platform.personnel.Personnel" parameterType="Integer">
+        SELECT
+        a.perId,
+        a.perName,
+        a.perNumber,
+        a.perCarNumber,
+        a.perPicture,
+        a.perType
+        FROM
+        tbl_personnel a
+        where a.perType = #{types}
+    </select>
+    <!--根据证件号查询人员数-->
+    <select id="queryCountByNumber" parameterType="String" resultType="Integer">
+        select count(a.perId) from tbl_personnel a where a.perNumber = #{perNumber}
+    </select>
+</mapper>

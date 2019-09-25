@@ -1,0 +1,46 @@
+sql.ip = 118.24.187.184
+sql.user = root
+sql.password = bY785StJ
+sql.databases =yt_platform
+
+
+filePath = /opt/backupDatabase/
+
+
+server.port=8090
+logging.level.root=debug
+spring.dubbo.application.name=platform-hikengineering
+spring.dubbo.registry.protocol=zookeeper
+spring.dubbo.registry.address=192.168.2.165:2181
+spring.dubbo.base-package=com.san.platform
+spring.dubbo.protocol.name=dubbo
+spring.datasource.url=jdbc:mysql://${sql.ip}:3306/yt_platform?characterEncoding=UTF-8
+spring.datasource.username=${sql.user}
+spring.datasource.password=${sql.password}
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+
+mybatis.mapper-locations=classpath:mapper/*Mapper.xml
+mybatis.configuration.mapUnderscoreToCamelCase=true
+
+
+pagehelper.helper-dialect=mysql
+pagehelper.params=count=countSql
+pagehelper.reasonable=true
+pagehelper.support-methods-arguments=true
+
+spring.mvc.view.prefix=/WEB-INF/jsp/
+spring.mvc.view.suffix=.jsp
+
+#对于rabbitMQ的支持
+spring.application.name=rabbitmq-hello
+spring.rabbitmq.host=192.168.2.165
+spring.rabbitmq.port=5672
+virtual-host: /
+spring.rabbitmq.username=sansan
+spring.rabbitmq.password=sansan
+
+
+
+
+
+

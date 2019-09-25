@@ -1,0 +1,65 @@
+server.port=8443
+server.ssl.key-store: classpath:keystore.p12
+server.ssl.key-store-password: yt_platform
+server.ssl.keyStoreType: PKCS12
+spring.thymeleaf.cache=false
+spring.thymeleaf.mode=LEGACYHTML5
+spring.dubbo.application.name=platform-web
+spring.dubbo.registry.protocol=zookeeper
+#spring.dubbo.registry.address=192.168.1.70:2181
+spring.dubbo.registry.address=192.168.1.99:2187,192.168.1.99:2188,192.168.1.99:2189
+spring.dubbo.base-package=com.san.platform
+spring.dubbo.protocol.name=dubbo
+spring.dubbo.consumer.timeout=10000
+spring.dubbo.consumer.check=false
+spring.aop.auto=true
+
+spring.mvc.static-path-pattern=/image/**
+spring.resources.static-locations=file:D://lib-image/img-visit/,file:D://lib-image/img-snap/,file:D://lib-image/img-person/,file:D://lib-image/img-map/,file:D://lib-image/img-picpic/
+
+
+#对于rabbitMQ的支持
+spring.application.name=rabbitmq-hello
+spring.rabbitmq.host=192.168.1.99
+spring.rabbitmq.port=5672
+virtual-host: /
+spring.rabbitmq.username=admin
+spring.rabbitmq.password=admin
+
+# 设置单个文件最大内存
+spring.http.multipart.maxFileSize=100Mb
+# 设置所有文件最大内存
+spring.http.multipart.maxRequestSize=100Mb
+# 自定义文件上传路径
+web.upload-path=D:/Develop/Files/Photos/
+
+#根路径
+path.baseUrl=D:\\lib-image
+#人像库
+path.person=\\img-person\\
+#人像库
+path.map=\\img-map\\
+#访问路径
+path.access=/image/
+#访客库
+path.visit=\\img-visit\\
+#以图搜图
+path.picpic=\\img-picpic\\
+#离场球机
+path.leave=138.65.200.143
+#离场球机2
+path.leave2=138.65.200.142
+#本机ip
+localhostip.path=192.168.1.99
+#导出文件路径
+export.path=D:\\lib-tem\\
+#导出文件路径盘符
+disk.path=D:/
+#请求的协议路径
+http.path=http://
+#解决web与脸谱之间https通信用hikversion端口
+http.port=18087
+
+
+
+

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="bean" />
+        <module name="common-util" />
+        <module name="hikface" />
+        <module name="hikvison" />
+        <module name="interface" />
+        <module name="service" />
+        <module name="service-util" />
+        <module name="web" />
+        <module name="web-util" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="bean" target="1.8" />
+      <module name="common-util" target="1.8" />
+      <module name="commonutil" target="1.5" />
+      <module name="hikengineering" target="1.8" />
+      <module name="hikface" target="1.8" />
+      <module name="hikvison" target="1.8" />
+      <module name="interface" target="1.8" />
+      <module name="parent" target="1.8" />
+      <module name="service" target="1.8" />
+      <module name="service-util" target="1.8" />
+      <module name="web" target="1.8" />
+      <module name="web-util" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="bean" options="" />
+      <module name="service" options="" />
+      <module name="web" options="" />
+    </option>
+  </component>
+</project>

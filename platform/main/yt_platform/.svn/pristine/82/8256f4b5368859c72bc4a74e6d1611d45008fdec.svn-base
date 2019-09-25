@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.region.mapper.RegionMapper">
+
+    <!-- 查询所有 -->
+    <select id="queryRegionParentId"
+            parameterType="com.san.platform.region.Region"
+            resultType="com.san.platform.region.Region">
+        SELECT
+        r.regionId,
+        r.regionParentId,
+        r.regionName,
+        r.regionIndex,
+        r.regionMemo,
+        r.regionSon
+        FROM
+            tbl_region r where r.regionParentId = #{regionParentId}
+        ORDER BY
+            r.regionId DESC
+    </select>
+
+    <!-- 根据节点reginID值 -->
+    <select id="queryReginById"
+            resultType="com.san.platform.region.Region"
+            parameterType="com.san.platform.region.Region">
+        SELECT
+	r.regionId,
+	r.regionParentId,
+	r.regionName,
+	r.regionIndex,
+	r.regionMemo,
+	r.regionSon
+FROM
+	tbl_region r
+WHERE
+	regionId = #{regionId}
+    </select>
+
+    <!--根据rid删除此节点-->
+    <delete id="removeRegin">
+        DELETE FROM tbl_region WHERE regionId = #{regionId}
+    </delete>
+
+    <!--根据pid删除此节点-->
+    <delete id="removeReginPid">
+        DELETE FROM tbl_region WHERE regionParentId = #{regionParentId}
+    </delete>
+
+    <!-- 获取reginID值之后获取父节点regionparentID值 -->
+    <select id="queryReginByParid"
+            resultType="com.san.platform.region.Region">
+        SELECT
+	r.regionId,
+	r.regionParentId,
+	r.regionName,
+	r.regionIndex,
+	r.regionMemo,
+	r.regionSon
+FROM
+	tbl_region r
+WHERE
+	regionId = #{regionId}
+    </select>
+
+    <!-- 查询pid所有带有父节点的主id -->
+    <select id="queryReginByPid"
+            resultType="com.san.platform.region.Region">
+       select r.regionId from tbl_region r where regionParentId=#{regionParentId}
+    </select>
+
+    <!-- 根据rname查询出此条rid存起来 -->
+    <select id="queryReginByname"
+            resultType="com.san.platform.region.Region">
+       select regionId,regionParentId from tbl_region where regionName=#{regionName}
+    </select>
+
+    <!-- 模糊查询 -->
+    <select id="querySonByLike"
+            resultType="com.san.platform.region.Region">
+       select regionSon,regionId from tbl_region where regionSon like binary "%"#{regionId}"%"
+    </select>
+
+     <!-- 保存 -->
+    <insert id="createRegion">
+    INSERT INTO tbl_region ( regionParentId, regionName,regionIndex,regionMemo,regionSon)VALUES(#{regionParentId},#{regionName},#{regionIndex},#{regionMemo},#{regionSon})
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateRegin">
+    update tbl_region set regionName=#{regionName}, regionIndex=#{regionIndex}, regionMemo=#{regionMemo} WHERE regionId=#{regionId}
+    </update>
+
+    <!-- 更新 -->
+    <update id="updateReginonId">
+    update tbl_region set regionSon=#{arg0} WHERE regionId=#{arg1}
+    </update>
+
+</mapper>

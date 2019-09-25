@@ -1,0 +1,20 @@
+package com.san.platform.setting;
+
+import com.san.platform.Exception.CustomException;
+import com.san.platform.util.Server_Side_Testing;
+
+import java.util.List;
+
+public interface SystemStateService extends Server_Side_Testing {
+
+
+    //cpu
+    String queryCpuPerc() throws CustomException;
+    //内存
+    int[] queryPhysicalMemory() throws CustomException;
+//    硬盘
+    List<String[]> queryFileSystemInfo() throws CustomException;
+
+    //时间
+    String querySysRuntime() throws CustomException;
+}

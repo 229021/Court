@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.task.mapper.TaskResultMapper">
+    <!-- 查询所有 -->
+    <select id="queryByTaskGuid" parameterType="String" resultType="com.san.platform.task.TaskResult">
+        SELECT
+        r.id,
+        r.taskGuid,
+        r.perName,
+        r.perNumber,
+        r.resultCode,
+        r.resultInfo,
+        r.taskDate
+        FROM
+            tbl_taskresult r where r.taskGuid = #{taskGuid}
+        ORDER BY
+            r.taskDate DESC
+    </select>
+
+</mapper>

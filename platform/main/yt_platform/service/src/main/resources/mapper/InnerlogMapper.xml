@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.innerlog.mapper.InnerlogMapper">
+
+    <resultMap id="TblInnerlog" type="com.san.platform.innerlog.Innerlog" autoMapping="true">
+    </resultMap>
+    <select id="queryInnerlogByTime" resultMap="TblInnerlog">
+
+		select
+		a.logId,
+		a.logLevel,
+		a.opName,a.opRole,
+		a.opType,
+		a.opModel,
+		a.opInfo,
+		a.opTime,
+		a.clientIp
+       from  tbl_innerlog a
+       <where>
+		   <if test="startTime != null and startTime != ''">
+			   and a.opTime &gt;= #{startTime}
+		   </if>
+		   <if test="endTime != null and endTime != ''">
+			   and a.opTime &lt;= #{endTime}
+		   </if>
+	   </where>
+       ORDER  BY a.logId ASC
+	</select>
+
+
+
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.control.mapper.ControlMapper">
+    <!-- 修改 -->
+    <update id="updateControl">
+    update tbl_control set conMapId=#{conMapId},deviceMapX=#{deviceMapX},deviceMapY=#{deviceMapY} where conDeviceId=#{conDeviceId}
+    </update>
+
+    <!-- 查询所有 -->
+    <select id="queryControl"
+            resultType="com.san.platform.control.Control">
+        select c.id,c.conGuid,c.conDeviceId,c.conMapId,c.conMemo,c.deviceMapX,c.deviceMapY,d.deviceName,d.deviceIP from tbl_control c INNER JOIN tbl_device d where c.conDeviceId = d.deviceId
+    </select>
+
+    <!-- 根据MapId查询所有 -->
+    <select id="queryControlMapId"
+            resultType="com.san.platform.control.Control">
+        select c.id,c.conGuid,c.conDeviceId,c.conMapId,c.conMemo,c.deviceMapX,c.deviceMapY from tbl_control c where conMapId=#{arg0}
+    </select>
+
+    <!-- 去除MapId查询剩余 -->
+    <select id="queryControlNotconMapId"
+            resultType="com.san.platform.control.Control">
+        select c.id,c.conGuid,c.conDeviceId,c.conMapId,c.conMemo,c.deviceMapX,c.deviceMapY from tbl_control c where conMapId!=#{arg0} and conMapId!=0
+    </select>
+
+    <!-- 根据Id查询数据库有此条信息没 -->
+    <select id="queryControlId"
+            resultType="com.san.platform.control.Control">
+       select c.id,c.conGuid,c.conDeviceId,c.conMapId,c.conMemo,c.deviceMapX,c.deviceMapY from tbl_control c where conDeviceId = #{conDeviceId}
+    </select>
+
+    <!-- 获取设备id 添加设备坐标表中 -->
+    <insert id="createControl">
+        insert into tbl_control(conDeviceId,conMapId,deviceMapx,deviceMapy)VALUES(#{conDeviceId},#{conMapId},#{deviceMapX},#{deviceMapY})
+    </insert>
+
+    <!-- 根据Mapid删除布控表 -->
+    <delete id="removeControlByMapId">
+        delete from tbl_control where conMapId=#{conMapId}
+    </delete>
+
+    <!-- 根据设备id删除布控表 -->
+    <delete id="removeDeviceconDeviceId">
+        delete from tbl_control where conDeviceId=#{conDeviceId}
+    </delete>
+
+</mapper>

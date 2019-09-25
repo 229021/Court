@@ -1,0 +1,10 @@
+com\san\platform\setting\NetworkService.class
+com\san\platform\setting\SystemStateService.class
+com\san\platform\device\AbilityService.class
+com\san\platform\user\UserService.class
+com\san\platform\option\OptionService.class
+com\san\platform\device\DeviceService.class
+com\san\platform\visitor\RepairCardService.class
+com\san\platform\util\Server_Side_Testing.class
+com\san\platform\personnel\PersonnelService.class
+com\san\platform\hikengineer\HikSenderTopicService.class

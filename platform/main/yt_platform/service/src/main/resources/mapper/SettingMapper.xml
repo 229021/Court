@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.setting.mapper.SettingMapper">
+
+    <!-- 根据key查询value -->
+    <select id="queryByKey" resultType="com.san.platform.setting.Setting">
+        SELECT
+        s.setKey,
+        s.setValue
+        FROM
+            tbl_setting s
+        where s.setKey = #{setKey}
+    </select>
+    <!-- 根据key更新value-->
+    <update id="updateByKey">
+        update tbl_setting set setValue = #{setValue} where setKey = #{setKey}
+    </update>
+
+
+
+</mapper>

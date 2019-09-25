@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.option.mapper.OptionMapper">
+
+    <!-- 查询所有选项事由（按创建时间降序） -->
+    <select id="selectOptionPage"
+            parameterType="com.san.platform.option.Option"
+            resultType="com.san.platform.option.Option">
+        SELECT
+        o.optionId,
+        o.optionName,
+        o.optionLevel,
+        o.optionMemo,
+        o.optionCreateTime,
+        o.optionModTime
+        FROM
+            tbl_option o
+        ORDER BY
+            o.optionCreateTime DESC
+    </select>
+
+</mapper>

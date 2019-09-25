@@ -1,0 +1,331 @@
+package com.san.platform.hikface.main.ISAPI;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+
+import java.io.*;
+import java.util.Iterator;
+import java.util.List;
+
+
+public class DemoISAPI {
+    static final boolean bHttpsNeed = true;
+
+    String serverIp = "";   // 脸谱ip地址
+    int serverPort = 0;     // ISAPI通信端口
+    String userName = "";   // 用户名
+    String userPwd = "";    // 密码
+
+    // 默认构造函数
+    public DemoISAPI() {
+        this("192.168.1.64", 443, "admin", "Hik12345");
+    }
+
+    // 标准构造函数
+    public DemoISAPI(String serverIp, int serverPort, String userName, String userPwd) {
+        this.serverIp = serverIp;
+        this.serverPort = serverPort;
+        this.userName = userName;
+        this.userPwd = userPwd;
+    }
+
+    public boolean login() {
+        // 添加凭证
+        HttpsClientUtil.bHttpsEnabled = DemoISAPI.bHttpsNeed;
+
+        if(HttpsClientUtil.bHttpsEnabled)
+        {
+            HttpsClientUtil.httpsClientInit(this.serverIp, this.serverPort, this.userName, this.userPwd);
+        }
+        else
+        {
+            UsernamePasswordCredentials creds = new UsernamePasswordCredentials(this.userName, this.userPwd);
+            HTTPClientUtil.client.getState().setCredentials(AuthScope.ANY, creds);
+        }
+
+        //登录校验代码待补充
+        String strUrl = "/ISAPI/Security/userCheck";
+        try
+        {
+            String strOut =  "";
+
+            if(HttpsClientUtil.bHttpsEnabled)
+            {
+                strOut = HttpsClientUtil.httpsGet("https://" + this.serverIp + ":" + String.valueOf(this.serverPort) + strUrl);
+            }
+            else
+            {
+                strOut= HTTPClientUtil.doGet("http://" + this.serverIp + ":" + String.valueOf(this.serverPort) + strUrl, null);
+            }
+
+            System.out.println(strOut);
+            SAXReader saxReader = new SAXReader();
+            try{
+
+                Document document = saxReader.read(new ByteArrayInputStream(strOut.getBytes("UTF-8")));
+                Element employees=document.getRootElement();
+
+                for(Iterator i = employees.elementIterator(); i.hasNext();){
+
+                    Element employee = (Element) i.next();
+
+                    if(employee.getName() == "statusValue" && 0 ==  employee.getText().compareTo("200")){
+
+                        System.out.println("Login Successed!");
+                        return true;
+                    }
+                }
+                //login fail
+                System.out.println("Login fail...");
+                return false;
+
+            } catch (DocumentException e) {
+                System.out.println("Login fail DocumentException...");
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+        catch (Exception e) {
+            // TODO Auto-generated catch block
+            System.out.println("Login fail exception...");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public String excute(String url, String method, String inbound) {
+
+        System.out.println("url:" + url);
+        System.out.println("method:" + method);
+        System.out.println("inbound:");
+        System.out.println(inbound);
+        String result = "";
+        String out = "";
+        JsonFormatTool JsonFormatTool = new JsonFormatTool();
+        if(method == "GET")
+        {
+            try
+            {
+                if(HttpsClientUtil.bHttpsEnabled)
+                {
+                    out = HttpsClientUtil.httpsGet("https://" + this.serverIp + ":" + url);
+                }
+                else
+                {
+                    out = HTTPClientUtil.doGet("http://" + this.serverIp + ":" + url, null);
+                }
+                System.out.println("outbound(GET):");
+                System.out.println(JsonFormatTool.formatJson(out));
+                result = JsonFormatTool.formatJson(out);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                result = "";
+            }
+        }
+        else if(method == "PUT")
+        {
+            try
+            {
+                if(HttpsClientUtil.bHttpsEnabled)
+                {
+                    out = HttpsClientUtil.httpsPut("https://" + this.serverIp + ":" + url, inbound);
+                }
+                else
+                {
+                    out = HTTPClientUtil.doPut("http://" + this.serverIp + ":" + url, inbound, null);
+                }
+
+                System.out.println("outbound(PUT):");
+                System.out.println(JsonFormatTool.formatJson(out));
+                result = JsonFormatTool.formatJson(out);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                result = "";
+            }
+        }
+        else if(method == "POST")
+        {
+            try
+            {
+                if(HttpsClientUtil.bHttpsEnabled)
+                {
+                    out = HttpsClientUtil.httpsPost("https://" + this.serverIp + ":" + url, inbound);
+                }
+                else
+                {
+                    out = HTTPClientUtil.doPost("http://" + this.serverIp + ":" + url, inbound, null);
+                }
+
+                System.out.println("outbound(POST):");
+                System.out.println(JsonFormatTool.formatJson(out));
+                result = JsonFormatTool.formatJson(out);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                result = "";
+            }
+        }
+        else if(method == "DELETE")
+        {
+            try
+            {
+                if(HttpsClientUtil.bHttpsEnabled)
+                {
+                    out = HttpsClientUtil.httpsDelete("https://" + this.serverIp + ":" + url);
+                }
+                else
+                {
+                    out = HTTPClientUtil.doDelete("http://" + this.serverIp + ":" + url, null);
+                }
+
+                System.out.println("outbound(DELETE):");
+                System.out.println(JsonFormatTool.formatJson(out));
+                result = JsonFormatTool.formatJson(out);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                result = "";
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        // 执行接口定义
+        // 1、接口的基本调用方法、输入数据格式、返回数据格式等这里不做介绍，均参考《ISAPI标准协议边缘脸谱功能介绍V1.2.0.pdf》，基本使用信息这里不再重复阐述
+        // 2、接口的调用效果，可以访问https://192.168.1.64/，均有对应模块，用户名：admin，密码：Hik12345
+        // 3、接口的调用传参数据，可以参考浏览器访问https://192.168.1.64时F12的相关数据
+        // 4、接口的调用效果，还可以参考海康官方提供的ClientDemo工程
+        // 5、本DEMO的接口和说明，都是针对我方人脸平台的一些使用注意事项的相关信息
+
+        // ----------------------
+        /*
+         * Interface：创建人脸库
+         * Description：
+         *   1、得到的输出中FDID需记录下来到数据库中，查询人脸库时FDID未必要输入参数
+         *   2、人脸库名字唯一，重复创建会报错
+         */
+        String uri_01 = "/ISAPI/Intelligent/FDLib?format=json";
+        String method_01 = "POST";
+        String inboundFile_01 = "d:/inbound/01.json";
+
+        /*
+         * Interface：人脸库检索（By FDID & faceLibType）
+         * Description：
+         *   1、FDID为必填，根据创建人脸库时得到的填入；
+         *   2、faceLibType为必填，固定传blackFD
+         */
+        String uri_02 = "/ISAPI/Intelligent/FDLib?format=json&FDID=1&faceLibType=blackFD";
+        String method_02 = "GET";
+        String inboundFile_02 = "";
+
+        /*
+         * Interface：人脸添加到人脸库
+         * Description：
+         *   1、调用该接口前，应该先调用人脸分析接口，把闸机图片做一下分析（因为存在多张人脸），得到分析结果后根据返回的坐标数据把抓拍图片进行截取
+         *   2、传入本接口的应该是截取的图片数据。还需要考虑截取的正确性问题，需要好好测试一下，比如两个人都站在闸机区域中。
+         *   3、faceURL为人脸图片地址，脸谱会自动访问该地址获取图片
+         *   4、返回的FPID为人脸唯一ID，需要存储下来
+         */
+        String uri_03 = "/ISAPI/Intelligent/FDLib/FaceDataRecord?format=json";
+        String method_03 = "POST";
+        String inboundFile_03 = "d:/inbound/03.json";
+
+        /*
+         * Interface：人脸分析
+         * Description：
+         *   1、imagesData为人脸图片地址，脸谱会自动访问该地址获取图片
+         *   2、从返回的数据中人脸坐标和人脸矩形区域
+         *   3、注意人脸不是一个时候的处理
+         */
+        String uri_04 = "/ISAPI/SDT/Face/pictureAnalysis";
+        String method_04 = "POST";
+        String inboundFile_04 = "d:/inbound/04.json";
+
+        /*
+         * Interface：人脸库以图搜图
+         * Description：
+         *   1、调用此接口前，应该先调用人脸分析接口得到抓拍图像中的人脸（因为有可能存在多张人脸），拿到其中的具体人脸模型数据（modelData），模型数据是一个字符串数据，为截取人脸的图片BASE64串
+         *   2、ISAPI脸谱接口文档中提供三种以图搜图方式，URL/modelData/Binary，这里使用第二种。（第一种简单但实测不work，第二种也是海康脸谱平台在用的方式，第三种尚未测试）
+         *   3、需要注意返回结果中可能不止一个，第一因为人脸可以重名添加没有限定，第二也可能出现长相类似的，使用该结果时需要考虑匹配度数据阈值如何衡量
+         */
+        String uri_n = "/ISAPI/Intelligent/FDLib/searchByPic?format=json";
+        String method_n = "POST";
+        String inboundFile_n = "d:/inbound/n.json";
+
+        /*
+         * 通过修改这里，改变要执行的接口
+         */
+        String activeUri = uri_04;
+        String activeMethod = method_04;
+        String activeInboundFile = inboundFile_04;
+
+        // 对象初始化
+        DemoISAPI inst = new DemoISAPI("192.168.1.64", 443, "admin", "Hik12345");
+
+        // 登录验证
+        inst.login();
+
+        // 输入参数读取
+        String inbound = "";
+        if(!activeInboundFile.equals("")) {
+            try {
+                // 文件读取输入参数，参考海康ISAPI脸谱协议文档，直接复制输入参数到文件中。一次只复制一个请求。
+                File file = new File(activeInboundFile);
+                InputStreamReader inputReader = new InputStreamReader(new FileInputStream(file));
+                BufferedReader bf = new BufferedReader(inputReader);
+
+                // 按行读取字符串
+                String buffer;
+                while ((buffer = bf.readLine()) != null) {
+                    inbound += buffer;
+                    inbound += "\n";
+                }
+                bf.close();
+                inputReader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // 接口执行
+        String result = inst.excute(activeUri, activeMethod, inbound);
+        try {
+            JSONObject jsonobj2 = JSON.parseObject(result);
+            Long code = Long.parseLong(jsonobj2.getString("errorCode"));
+            if (code == 1) {
+                JSONArray array = jsonobj2.getJSONArray("targets");
+                for (int i = 0; i < array.size(); i++) {
+                    //System.out.println("sssssss"+array.get(i));
+                    JSONObject jsonObject = JSONObject.parseObject("" + array.get(i));
+                    System.out.println(jsonObject.getString("targetModelData"));
+                }
+                String result1 = inst.excute(uri_n, method_n, "{\"searchResultPosition\":0,\"modelMaxNum\":50,\"maxResults\":20,\"dataType\":\"modelData\",\"targetModelData\":\"SElLREZSNDBUWAAAAAAAAArb4AcM/iYq8dQe9xG4P+Ad5Ae1M/ntekYQyTctBcDpGwz3K9/MQOrz7i9NHw0qz+AJCzX7592AxtEnKsVd5jHeHQTzBxLh9tsL0B+3GufyFdsSSw4GFgD3/ELOcv/kJfTm5u8pyzMartLQtOC8+d7zHdk5Ah+V6dMO9C0eFBbgMADrSBIQDb9FCEllMhoTBfgDMTo7PwMcCt9Q3KsYK8IQ0UAgH+wy9rE8LK3dUKMsAhINCx513QpNDPb4Mfw5TORL6QPqEL9EBgJQ5vss6d9Q9gxF8gUUB2IJfw4K8uolE9sr5h7vBSA1FbnT/AUDM+HsSqD+AAX14AciHDtD9gbqDysjfxPnCOAK/zU1BTfV3NDJEtLb1SMvHi+g8AgLIOP56TMkB9j+BkgL9tz1BwJ34t/OCy3D9RfNTwHbDxRX8BPdOj0exxTvIjbXQCD5AkQuF0y6CxIDWRNRtyf86AYG2zH8zhshbTX54yAJJBXy1rggVQbCSSqS/f5Jyw4cYMoG4AlFTNLX5wr0Pwrp/S09t/pCGL7RPX9E30oQzctG7cVAB/ELKUaAAD7dAxfjNDDlwiD62DvnCcwS9+gX9toM6h7wGgjaC+EL8PQZ4b8sqN0pERwju+jw6hnQ+R0gL8T52yPUMysDH9M+6dAD8Bwt+PsJ58bUzN1DK8YSuQPPOABsngQA\",\"minSimilarity\":0.3,\"maxSimilarity\":1}: ");
+            /*int matchList = result1.indexOf("MatchList");
+            String ss1 = result1.substring(matchList+"MatchList".length() +2);
+            String ss2 = ss1.substring(0,ss1.lastIndexOf("}"));
+            //System.out.println("lllllll"+ss2);
+            //JSONArray array = JSON.parseArray(ss2);
+            for (int q=0;q<array.size();q++) {
+                JSONObject jsonObject = JSONObject.parseObject("" + array.get(q));
+                System.out.println(jsonObject.getString("FPID"));
+                System.out.println("lllllll"+array.get(q));
+            }*/
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}

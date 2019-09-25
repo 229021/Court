@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.task.mapper.TaskMapper">
+
+    <!-- 查询所有 -->
+    <select id="queryAllTask"
+            parameterType="com.san.platform.task.Task"
+            resultType="com.san.platform.task.Task">
+        SELECT
+        t.taskId,
+        t.taskGuid,
+        t.taskDeviceId,
+        t.taskDeviceName,
+        t.taskPerType,
+        t.taskPerName,
+        t.taskResult,
+        t.taskStatus
+        FROM
+            tbl_task t
+        ORDER BY
+            t.taskId DESC
+    </select>
+    <!--更新任务结果信息-->
+    <update id="updateTaskInfo">
+        update tbl_task set taskResult = #{taskResult},taskError = #{taskError},taskStatus= #{taskStatus} where taskGuid= #{taskGuid}
+    </update>
+    <!--根据id查询任务信息-->
+    <select id="queryTaskById" resultType="com.san.platform.task.Task">
+         SELECT
+        t.taskId,
+        t.taskGuid,
+        t.taskDeviceId,
+        t.taskPerType,
+        t.taskResult,
+        t.taskError,
+        t.taskStatus
+        FROM
+            tbl_task t where t.taskId = #{taskId}
+    </select>
+    <select id="queryTaskByType" parameterType="Integer" resultType="com.san.platform.task.Task">
+        select taskDeviceId,taskGuid,taskResult,taskError from tbl_task t where t.taskPerType = #{taskPerType}
+    </select>
+    <!--根据guid查询任务信息-->
+    <select id="queryTaskByGuid" parameterType="String" resultType="com.san.platform.task.Task">
+         SELECT
+        t.taskId,
+        t.taskGuid,
+        t.taskDeviceId,
+        t.taskPerType
+        FROM
+            tbl_task t where t.taskGuid = #{taskGuid}
+    </select>
+</mapper>

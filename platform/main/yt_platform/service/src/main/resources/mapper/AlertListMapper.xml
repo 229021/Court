@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.alert.mapper.AlertListMapper">
+
+    <!-- 查询告警列表分页 模糊查询 -->
+    <select id="queryAlertListPage"
+            parameterType="com.san.platform.alert.AlertList"
+            resultType="com.san.platform.alert.AlertList">
+        SELECT
+        a.alertId,
+        a.alertPlace,
+        a.alertName,
+        a.alertCreateTime,
+        a.alertModTime,
+        a.perPicture,
+        a.perName,
+        a.perSex,
+        a.perNumber
+        FROM
+        tbl_alertlist a
+        <where>
+            <if test="perName != null and perName !=''">
+                and a.perName like concat('%',#{perName},'%')
+            </if>
+            <if test="perNumber != null and perNumber !=''">
+                and a.perNumber like concat('%',#{perNumber},'%')
+            </if>
+            <if test="perType != -2">
+                and a.perType = #{perType}
+            </if>
+            <if test="alertPlace != null and alertPlace !=''">
+                and a.alertPlace like concat('%',#{alertPlace},'%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 保存到其他人像库 -->
+    <select id="queryAlertListById"
+            parameterType="Integer"
+            resultType="com.san.platform.alert.AlertList">
+        SELECT
+        a.alertId,
+        a.perPicture,
+        a.perName,
+        a.perSex,
+        a.perNumber,
+        a.alertPlace,
+        a.alertName,
+        a.perUUID,
+    FROM
+        tbl_alertlist a
+        <where>
+            <if test="alertId != null and alertId !=''">
+                a.alertId = #{alertId}
+            </if>
+        </where>
+    </select>
+
+    <!--  导出全部 -->
+    <select id="queryAlertList"
+            parameterType="com.san.platform.alert.AlertList"
+            resultType="com.san.platform.alert.AlertList">
+    SELECT
+        a.alertId,
+        a.perPicture,
+        a.perName,
+        a.perSex,
+        a.perNumber,
+        a.alertPlace,
+        a.alertName,
+        a.perUUID,
+        a.perType
+    FROM
+        tbl_alertlist a
+    </select>
+
+    <!-- 导出选中的 -->
+    <select id="queryAlertLists"
+            parameterType="Integer"
+            resultType="com.san.platform.alert.AlertList">
+        SELECT
+        a.alertId,
+        a.perPicture,
+        a.perName,
+        a.perSex,
+        a.perNumber,
+        a.perType,
+        a.alertPlace,
+        a.alertName,
+        a.alertCreateTime,
+        a.alertModTime
+        FROM
+        tbl_alertlist a
+        <where>
+            <if test="alertId != null and alertId !=''">
+                a.alertId = #{alertId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 修改人员类型 -->
+    <update id="updatePersonnelTypes">
+        UPDATE
+        tbl_personnel
+        SET
+            perId = #{perId},
+            perType = #{perType}
+        where
+              perId = #{perId}
+    </update>
+
+
+    <!-- 按身份证查询人像库 -->
+    <select id="queryPersonnelByNumber" resultType="com.san.platform.personnel.Personnel">
+        select
+        p.perId,
+        p.perType,
+        p.perName,
+        p.perSex,
+        p.perNumber,
+        p.perPicture
+        from
+        tbl_personnel p
+        where
+        p.perNumber = #{p.perNumber}
+    </select>
+
+
+
+    <select id="selectAlertList" resultType="com.san.platform.alert.AlertList"
+            parameterType="com.san.platform.alert.AlertList">
+        select
+        a.alertId,
+        a.perName,
+        a.perPicture,
+        a.perSex,
+        a.perNumber,
+        a.alertPlace,
+        a.alertName,
+        a.alertCreateTime
+        from
+        tbl_alertlist a
+    </select>
+
+
+    <!-- 根据IP 查询告警规则  -->
+    <select id="selectRegion" resultType="com.san.platform.region.Region">
+        select r.regionId,r.regionName from tbl_region r where r.regionId =
+        (select mapRegion from tbl_map m where m.mapId =
+        (select c.conMapId from tbl_control c where c.conDeviceId =
+        (select d.deviceId from tbl_device d where deviceIP = #{deviceIP})))
+    </select>
+
+
+    <insert id="createAlertList">
+        INSERT  INTO tbl_alertlist(
+        alertId,
+        perPicture,
+        perName,
+        perSex,
+        perNumber,
+        alertPlace,
+        alertName,
+        alertCreateTime,
+        perUUID,
+        perType
+        ) VALUES (
+        #{alertId},
+        #{perPicture},
+        #{perName},
+        #{perSex},
+        #{perNumber},
+        #{alertPlace},
+        #{alertName},
+        #{alertCreateTime},
+        #{perUUID},
+        #{perType}
+        )
+    </insert>
+
+</mapper>

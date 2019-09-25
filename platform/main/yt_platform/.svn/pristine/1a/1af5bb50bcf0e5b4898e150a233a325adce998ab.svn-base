@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.visitor.mapper.VisitorMapper">
+    <select id="queryVisitor" parameterType="com.san.platform.visitor.Visitor"
+            resultType="com.san.platform.visitor.Visitor">
+        SELECT
+        v.visitId,
+        v.visitSex,
+        v.visitName,
+        v.visitCardNumber,
+        v.visitCardType,
+        v.visitPicture,
+        v.visitTime,
+        v.leaveTime,
+        v.visitCause
+        FROM (select
+        *
+        from tbl_visit
+        <where>
+            <if test="isToday!= null and isToday == 'no'">
+                to_days(visitTime) != to_days(now())
+            </if>
+            <if test="isToday!= null and isToday == 'yes'">
+                to_days(visitTime) = to_days(now())
+            </if>
+            <if test="visitSex!=null">
+                and visitSex = #{visitSex}
+            </if>
+            <if test="visitCause!=null and visitCause !=''">
+                and visitCause = #{visitCause}
+            </if>
+        </where>) v
+        <where>
+            <if test="keyword!=null and keyword!=''">
+                and visitName LIKE  binary "%"#{keyword}"%"
+                OR  visitCardNumber LIKE  binary "%"#{keyword}"%"
+                OR  visitTime  LIKE  binary "%"#{keyword}"%"
+                OR  leaveTime  LIKE  binary "%"#{keyword}"%"
+            </if>
+        </where>
+        ORDER BY visitTime DESC
+    </select>
+    <select id="queryVisitorByIDNoToday" resultType="com.san.platform.visitor.Visitor">
+        SELECT
+        v.visitSex,
+        v.visitNation,
+        v.visitName,
+        v.visitCardNumber,
+        v.visitCardType,
+        v.visitPicture,
+        v.visitTime,
+        v.leaveTime,
+        v.visitCause
+        FROM tbl_visit v
+        where to_days(v.visitTime) = to_days(now()) and v.visitCardNumber = #{idnumber} limit 1
+    </select>
+    <select id="queryVisitorIdByIDNoToday" resultType="com.san.platform.visitor.Visitor">
+        SELECT
+        v.visitId,
+        v.visitName
+        FROM tbl_visit v
+        where to_days(v.visitTime) = to_days(now()) and v.visitCardNumber = #{idnumber} limit 1
+    </select>
+    <select id="queryVisitorByIDNo" resultType="com.san.platform.visitor.Visitor">
+        SELECT
+        v.visitSex,
+        v.visitNation,
+        v.visitName,
+        v.visitCardNumber,
+        v.visitCardType,
+        v.visitPicture,
+        v.visitTime,
+        v.leaveTime,
+        v.visitCause
+        FROM tbl_visit v
+        where v.visitCardNumber = #{idnumber} limit 1
+    </select>
+    <!--//设置离场时间为null 第二次进场用-->
+    <update id="updateVistorLeaveTime">
+        UPDATE tbl_visit SET leaveTime = NULL where visitId = #{id}
+    </update>
+    <!--更改图片-->
+    <update id="updateVisitor">
+        UPDATE tbl_visit SET visitPicture = #{visitPicture} where visitId = #{visitId}
+    </update>
+    <select id="queryVisitorInfo" resultType="com.san.platform.visitor.Visitor" parameterType="com.san.platform.visitor.Visitor">
+        SELECT
+        v.visitId,
+        v.visitSex,
+        v.visitNation,
+        v.visitName,
+        v.visitCardNumber,
+        v.visitCardType,
+        v.visitPicture,
+        v.visitTime,
+        v.leaveTime,
+        v.visitCause
+        FROM tbl_visit v
+        <where>
+            to_days(v.visitTime) = to_days(now())
+            <if test="visitCause!=null and visitCause !=''">
+                and visitCause = #{visitCause}
+            </if>
+        </where>
+    </select>
+    <select id="queryVisitorLeave" resultType="com.san.platform.visitor.Visitor">
+        SELECT
+        v.visitId,
+        v.visitName,
+        v.visitCardNumber,
+        v.visitPicture,
+        v.visitTime,
+        v.leaveTime,
+        v.visitCause
+        FROM tbl_visit v where v.leaveTime is null and to_days(v.visitTime) = to_days(now())
+    </select>
+    <select id="queryOldDateByMonth" resultType="com.san.platform.visitor.Visitor">
+        SELECT
+        v.visitId,
+        v.visitName,
+        v.visitCardNumber,
+        v.visitPicture,
+        v.visitTime,
+        v.leaveTime,
+        v.visitCause
+        FROM tbl_visit v
+        <where>
+            <if test="month!=0 and month !=null">
+                date_sub(now(),interval #{month} month) > v.visitTime
+            </if>
+        </where>
+    </select>
+</mapper>

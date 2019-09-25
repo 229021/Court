@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.alert.mapper.AlertMapper">
+
+    <!-- 查询所有告警信息，按创建时间降序 -->
+    <select id="queryAlertPage"
+            parameterType="com.san.platform.alert.Alert"
+            resultType="com.san.platform.alert.Alert">
+        select
+        a.alertId,
+        a.alertName,
+        a.alertPlace alertPlacestrr,
+        a.blackList blackListstrr,
+        a.whiteList whiteListstrr,
+        a.alertWindow,
+        a.alertSms,
+        a.alertMemo,
+        a.alertCreateTime,
+        a.alertModTime
+        from tbl_alert a
+        order by a.alertCreateTime desc
+    </select>
+    <!-- 修改 -->
+    <update id="updateAlert">
+      update tbl_alert
+      set
+      alertName = #{alertName},
+      alertPlace = #{alertPlace},
+      blackList = #{blackList},
+      whiteList = #{whiteList},
+      alertWindow = #{alertWindow},
+      alertSms = #{alertSms},
+      alertMemo = #{alertMemo},
+      alertCreateTime = #{alertCreateTime},
+      alertModTime = #{alertModTime}
+      where alertId = #{alertId}
+    </update>
+
+</mapper>

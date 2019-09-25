@@ -1,0 +1,148 @@
+package com.san.platform.personnel.mapper;
+
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.san.platform.personnel.Personnel;
+import com.san.platform.personnel.PicturePath;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import tk.mybatis.mapper.common.Mapper;
+
+import java.util.List;
+
+public interface PersonnelMapper extends Mapper<Personnel>{
+
+    /**
+     * 律师库查询--当前页
+     * @param personnel
+     * @return
+     */
+    public List<Personnel> queryPersonnel(Personnel personnel);
+
+    public Personnel queryPersonnelByNumber(Personnel personnel);
+
+    public Personnel selectTroublePersonnel(Personnel personnel);
+    /**
+     * 查询今日所有
+     * @param perType
+     * @return
+     */
+    public List<Personnel>  queryPersonnels(Personnel perType);
+
+    public Personnel  queryPersonnelById(Personnel personnel);
+
+    public Personnel  queryPersonnelByIds(Personnel personnel);
+
+    /**
+     * 用于页面重置--测试接口
+     * @param personnel
+     * @return
+     */
+    public List<Personnel> queryPersonnelReset(Personnel personnel);
+
+    /**
+     * 闹访查询
+     * @param personnel
+     * @return
+     */
+    public List<Personnel> queryTroublePersonnel(Personnel personnel);
+
+    /**
+     * 失信人查询
+     * @param personnel
+     * @return
+     */
+    public List<Personnel> queryLowCreditPersonnel(Personnel personnel);
+
+    /**
+     * 特殊人查询
+     * @param personnel
+     * @return
+     */
+    public List<Personnel> querySpecialPersonnel(Personnel personnel);
+
+    /**
+     * 内部人查询
+     * @param personnel
+     * @return
+     */
+    public List<Personnel> queryStaffPersonnel(Personnel personnel);
+
+    /**
+     * 内部人查询
+     * @param personnel
+     * @return
+     */
+    public List<Personnel> queryCustomizePersonnel(Personnel personnel);
+
+    /**
+     * 修改律师库
+     * @param personnel
+     */
+    public void updatePersonnel(Personnel personnel);
+
+    /**
+     * 添加律师
+     * @param personnel
+     */
+    public void createPersonnel(Personnel personnel);
+
+    /**
+     * 删除律师
+     * @param perId
+     */
+    public void removePersonnel(Integer perId);
+
+    /**
+     * 根据人员类型放置不同的人员库--更改人员状态
+     * @param
+     */
+    public void updatePersonnelType(Personnel personnel);
+
+    /**
+     * 导入
+     * @param personnel
+     */
+    public void importPersonnel(Personnel personnel);
+
+    /**
+     *
+     * @param picturePath
+     */
+    public void savePicturePath(PicturePath picturePath);
+
+    /**
+     * 查询图片路径--新表
+     * @param
+     */
+    public List<String> queryPicPath();
+
+    /**
+     * 查询当前库全部图片
+     * @return
+     */
+    public List<String> queryPersonnelByTypeAll(Integer perType);
+
+    /**
+     * 查询图片路径--personnel表
+     * @param
+     */
+    public String queryPersonnelByTypes(@Param("perId") Integer perId,@Param("perType") Integer perType);
+
+    /**
+     * 根据人员类型查询所有的人员信息
+     * @param type
+     * @return
+     */
+    public List<Personnel> queryAllByType (Integer type);
+
+    /**
+     * 根据证件号查询人员数
+     * @param perNumber
+     * @return
+     */
+    public int queryCountByNumber(String perNumber);
+
+}

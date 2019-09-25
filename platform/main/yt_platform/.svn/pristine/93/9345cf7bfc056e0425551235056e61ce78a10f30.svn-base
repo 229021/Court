@@ -1,0 +1,13 @@
+server.port=8097
+spring.dubbo.application.name=hikface
+spring.dubbo.registry.protocol=zookeeper
+spring.dubbo.registry.address=192.168.1.51:2181
+spring.dubbo.base-package=com.san.platform
+spring.dubbo.protocol.name=dubbo
+spring.dubbo.consumer.timeout=10000
+spring.dubbo.consumer.check=false
+###¡≥∆◊≈‰÷√–≈œ¢
+face.ip=192.168.1.64
+face.port=443
+face.user=admin
+face.pass=Hik12345

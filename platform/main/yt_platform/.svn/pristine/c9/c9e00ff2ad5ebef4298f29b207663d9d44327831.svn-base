@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.map.mapper.MapMapper">
+
+    <!-- 查询所有 -->
+    <select id="queryAllMap"
+            parameterType="com.san.platform.map.Map"
+            resultType="com.san.platform.map.Map">
+        SELECT
+        m.mapId,
+        m.mapName,
+        m.mapRegion,
+        m.mapImage,
+        m.mapX,
+        m.mapY,
+        m.mapMemo
+        FROM
+            tbl_map m
+        ORDER BY
+            m.mapId DESC
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="queryMapBySelectId"
+            parameterType="com.san.platform.map.Map"
+            resultType="com.san.platform.map.Map">
+        select * from tbl_map where mapId=#{mapId}
+    </select>
+
+</mapper>

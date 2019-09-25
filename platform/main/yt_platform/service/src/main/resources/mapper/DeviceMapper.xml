@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.device.mapper.DeviceMapper">
+
+    <!-- 查询所有 -->
+    <select id="queryAllDevice"
+            parameterType="com.san.platform.device.Device"
+            resultType="com.san.platform.device.Device">
+        SELECT
+        d.deviceId,
+        d.deviceName,
+        d.deviceGuid,
+        d.deviceType,
+        d.deviceAbility,
+        d.deviceIP,
+        d.devicePort,
+        d.deviceLogin,
+        d.devicePass,
+        d.deviceChannel,
+        d.deviceCreateTime,
+        d.deviceModTime
+        FROM
+            tbl_device d
+        <where>
+            <if test="deviceName != null and deviceName != ''">
+                AND d.deviceName like CONCAT('%', #{deviceName}, '%')
+            </if>
+            <if test="deviceType != 0">
+                AND d.deviceType = #{deviceType}
+            </if>
+        </where>
+        ORDER BY
+            d.deviceId DESC
+    </select>
+
+    <select id="queryDeviceByIP" resultType="com.san.platform.device.Device">
+        SELECT
+        d.deviceId,
+        d.deviceName,
+        d.deviceGuid,
+        d.deviceType,
+        d.deviceAbility,
+        d.deviceIP,
+        d.devicePort,
+        d.deviceLogin,
+        d.devicePass,
+        d.deviceChannel,
+        d.deviceCreateTime,
+        d.deviceModTime
+        FROM
+        tbl_device d
+        where d.deviceIP = #{deviceIP} limit 1
+    </select>
+
+    <!-- 简约查询所有-->
+    <select id="queryAllDeviceCount"
+            parameterType="com.san.platform.device.Device"
+            resultType="com.san.platform.device.Device">
+       select * from tbl_device
+    </select>
+
+    <!--根据id查询-->
+    <select id="queryDeviceById"
+            parameterType="com.san.platform.device.Device"
+            resultType="com.san.platform.device.Device">
+       SELECT
+        d.deviceId,
+        d.deviceName,
+        d.deviceGuid,
+        d.deviceType,
+        d.deviceAbility,
+        d.deviceIP,
+        d.devicePort,
+        d.deviceLogin,
+        d.devicePass,
+        d.deviceChannel,
+        d.deviceModTime,
+		d.deviceMemo
+        FROM
+        tbl_device d
+				where d.deviceId=#{deviceId}
+    </select>
+
+    <!--根据id查询-->
+    <select id="queryDeviceByIdSQL"
+            parameterType="com.san.platform.device.Device"
+            resultType="com.san.platform.device.Device">
+       SELECT
+        d.deviceId,
+        d.deviceName,
+        d.deviceGuid,
+        d.deviceType,
+        d.deviceAbility,
+        d.deviceIP,
+        d.devicePort,
+        d.deviceLogin,
+        d.devicePass,
+        d.deviceChannel,
+        d.deviceModTime,
+		d.deviceMemo
+        FROM
+        tbl_device d
+				where d.deviceId=#{deviceId}
+    </select>
+
+    <!--根据DeviceType查询-->
+    <select id="queryDeviceType"
+            parameterType="com.san.platform.device.Device"
+            resultType="com.san.platform.device.Device">
+       SELECT
+        d.deviceId,
+        d.deviceName,
+        d.deviceGuid,
+        d.deviceType,
+        d.deviceAbility,
+        d.deviceIP,
+        d.devicePort,
+        d.deviceLogin,
+        d.devicePass,
+        d.deviceChannel,
+        d.deviceCreateTime,
+        d.deviceModTime
+        FROM
+        tbl_device d
+				where deviceType=#{deviceType}
+    </select>
+
+    <!--根据DeviceId筛选-->
+    <select id="queryDeviceIdNot"
+            parameterType="com.san.platform.device.Device"
+            resultType="com.san.platform.device.Device">
+      select deviceId,deviceName from tbl_device d,tbl_control c where d.deviceId=c.conDeviceId and d.deviceType=#{deviceType} ORDER BY d.deviceId
+    </select>
+    <!--查询所有的闸机设备-type=1002,1003-->
+    <select id="queryDeviceByType" resultType="com.san.platform.device.Device">
+        SELECT
+        d.deviceId,
+        d.deviceName,
+        d.deviceGuid,
+        d.deviceType,
+        d.deviceAbility,
+        d.deviceIP,
+        d.devicePort,
+        d.deviceLogin,
+        d.devicePass,
+        d.deviceChannel,
+        d.deviceCreateTime,
+        d.deviceModTime
+        FROM
+        tbl_device d
+        where d.deviceType = 1002 or d.deviceType = 1003
+    </select>
+
+    <!--<select id="selectDeviceByType" resultType="com.san.platform.device.Device">-->
+        <!--SELECT-->
+        <!--d.deviceId,-->
+        <!--d.deviceName,-->
+        <!--d.deviceGuid,-->
+        <!--d.deviceType,-->
+        <!--d.deviceAbility,-->
+        <!--d.deviceIP,-->
+        <!--d.devicePort,-->
+        <!--d.deviceLogin,-->
+        <!--d.devicePass,-->
+        <!--d.deviceChannel,-->
+        <!--d.deviceCreateTime,-->
+        <!--d.deviceModTime-->
+        <!--FROM-->
+        <!--tbl_device d-->
+        <!--where d.deviceType = 1001 or d.deviceType = 1004-->
+    <!--</select>-->
+</mapper>

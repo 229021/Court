@@ -1,0 +1,196 @@
+package com.san.platform.hikvison.mainclass;
+
+import com.san.platform.hikvison.ISAPI.JsonFormatTool;
+import com.san.platform.hikvison.ISAPI.HTTPClientUtil;
+import com.san.platform.hikvison.ISAPI.HttpsClientUtil;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+
+import java.io.*;
+import java.util.Iterator;
+public class DemoISAPI {
+    static final boolean bHttpsNeed = true;
+
+    String serverIp = "";   // 脸谱ip地址
+    int serverPort = 0;     // ISAPI通信端口
+    String userName = "";   // 用户名
+    String userPwd = "";    // 密码
+
+    // 默认构造函数
+    public DemoISAPI() {
+        this("192.168.1.64", 443, "admin", "Hik12345");
+    }
+
+    // 标准构造函数
+    public DemoISAPI(String serverIp, int serverPort, String userName, String userPwd) {
+        this.serverIp = serverIp;
+        this.serverPort = serverPort;
+        this.userName = userName;
+        this.userPwd = userPwd;
+    }
+
+     public boolean login() {
+        // 添加凭证
+        HttpsClientUtil.bHttpsEnabled = DemoISAPI.bHttpsNeed;
+
+        if(HttpsClientUtil.bHttpsEnabled)
+        {
+            HttpsClientUtil.httpsClientInit(this.serverIp, this.serverPort, this.userName, this.userPwd);
+        }
+        else
+        {
+            UsernamePasswordCredentials creds = new UsernamePasswordCredentials(this.userName, this.userPwd);
+            HTTPClientUtil.client.getState().setCredentials(AuthScope.ANY, creds);
+        }
+
+        //登录校验代码待补充
+        String strUrl = "/ISAPI/Security/userCheck";
+        try
+        {
+            String strOut =  "";
+
+            if(HttpsClientUtil.bHttpsEnabled)
+            {
+                strOut = HttpsClientUtil.httpsGet("https://" + this.serverIp + ":" + String.valueOf(this.serverPort) + strUrl);
+            }
+            else
+            {
+                strOut= HTTPClientUtil.doGet("http://" + this.serverIp + ":" + String.valueOf(this.serverPort) + strUrl, null);
+            }
+
+            System.out.println(strOut);
+            SAXReader saxReader = new SAXReader();
+            try{
+
+                Document document = saxReader.read(new ByteArrayInputStream(strOut.getBytes("UTF-8")));
+                Element employees=document.getRootElement();
+
+                for(Iterator i = employees.elementIterator(); i.hasNext();){
+
+                    Element employee = (Element) i.next();
+
+                    if(employee.getName() == "statusValue" && 0 ==  employee.getText().compareTo("200")){
+
+                        System.out.println("Login Successed!");
+                        return true;
+                    }
+                }
+                //login fail
+                System.out.println("Login fail...");
+                return false;
+
+            } catch (DocumentException e) {
+                System.out.println("Login fail DocumentException...");
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+        catch (Exception e) {
+            // TODO Auto-generated catch block
+            System.out.println("Login fail exception...");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+     public boolean excute(String url, String method, String inbound) {
+
+        System.out.println("url:" + url);
+        System.out.println("method:" + method);
+        System.out.println("inbound:");
+        System.out.println(inbound);
+
+
+        String out = "";
+        JsonFormatTool JsonFormatTool = new JsonFormatTool();
+        if(method == "GET")
+        {
+            try
+            {
+                if(HttpsClientUtil.bHttpsEnabled)
+                {
+                    out = HttpsClientUtil.httpsGet("https://" + this.serverIp + ":" + url);
+                }
+                else
+                {
+                    out = HTTPClientUtil.doGet("http://" + this.serverIp + ":" + url, null);
+                }
+                System.out.println("outbound(GET):");
+                System.out.println(JsonFormatTool.formatJson(out));
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return false;
+            }
+        }
+        else if(method == "PUT")
+        {
+            try
+            {
+                if(HttpsClientUtil.bHttpsEnabled)
+                {
+                    out = HttpsClientUtil.httpsPut("https://" + this.serverIp + ":" + url, inbound);
+                }
+                else
+                {
+                    out = HTTPClientUtil.doPut("http://" + this.serverIp + ":" + url, inbound, null);
+                }
+
+                System.out.println("outbound(PUT):");
+                System.out.println(JsonFormatTool.formatJson(out));
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return false;
+            }
+        }
+        else if(method == "POST")
+        {
+            try
+            {
+                if(HttpsClientUtil.bHttpsEnabled)
+                {
+                    out = HttpsClientUtil.httpsPost("https://" + this.serverIp + ":" + url, inbound);
+                }
+                else
+                {
+                    out = HTTPClientUtil.doPost("http://" + this.serverIp + ":" + url, inbound, null);
+                }
+
+                System.out.println("outbound(POST):");
+                System.out.println(JsonFormatTool.formatJson(out));
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return false;
+            }
+        }
+        else if(method == "DELETE")
+        {
+            try
+            {
+                if(HttpsClientUtil.bHttpsEnabled)
+                {
+                    out = HttpsClientUtil.httpsDelete("https://" + this.serverIp + ":" + url);
+                }
+                else
+                {
+                    out = HTTPClientUtil.doDelete("http://" + this.serverIp + ":" + url, null);
+                }
+
+                System.out.println("outbound(DELETE):");
+                System.out.println(JsonFormatTool.formatJson(out));
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return true;
+    }
+}

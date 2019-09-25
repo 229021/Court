@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.display.mapper.DisplayMapper">
+
+    <select id="queryEnterHours" resultType="com.san.platform.display.Display">
+		SELECT
+			DATE_FORMAT(visitTime, '%H') hours,
+			count(visitId) number
+		FROM
+			tbl_visit
+		WHERE
+			to_days(visitTime) = to_days(now())
+		GROUP BY
+			hours;
+    </select>
+
+    <select id="queryLeaveHours" resultType="com.san.platform.display.Display">
+		SELECT
+			DATE_FORMAT(leaveTime, '%H') hours,
+			count(visitId) number
+		FROM
+			tbl_visit
+		WHERE
+			to_days(leaveTime) = to_days(now())
+		GROUP BY
+			hours;
+    </select>
+
+
+    <select id="queryCauseNumber" resultType="com.san.platform.display.Display">
+		SELECT
+			visitCause,
+			COUNT(visitId) number
+		FROM
+			tbl_visit
+		WHERE
+			to_days(visitTime) = to_days(now())
+		GROUP BY
+			visitCause
+    </select>
+
+
+    <!--<select id="queryEnterNumber" resultType="Integer">-->
+		<!--SELECT-->
+			<!--count(visitId) number-->
+		<!--FROM-->
+			<!--tbl_visit-->
+		<!--WHERE-->
+			<!--to_days(visitTime) = to_days(now())-->
+    <!--</select>-->
+
+
+	<!--<select id="queryLeaveNumber" resultType="Integer">-->
+		<!--SELECT-->
+			<!--count(visitId) number-->
+		<!--FROM-->
+			<!--tbl_visit-->
+		<!--WHERE-->
+			<!--to_days(visitTime) = to_days(now())-->
+		<!--AND leaveTime IS NULL-->
+    <!--</select>-->
+
+
+</mapper>

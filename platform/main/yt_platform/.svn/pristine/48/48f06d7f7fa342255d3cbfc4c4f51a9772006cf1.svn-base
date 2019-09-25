@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.user.mapper.UserMapper">
+
+    <resultMap id="User" type="com.san.platform.user.User" autoMapping="true">
+    </resultMap>
+    <select id="selectUserPage"
+            parameterType="hashmap"
+            resultMap="User">
+		SELECT
+			u.userId,
+			u.userName,
+			u.relName,
+			u.userPwd,
+			u.relRoleId,
+			u.userPhone,
+			u.userStatus,
+			u.userMemo,
+			u.userCreateTime,
+			u.userModTime,
+			u.isLock,
+			u.changePwdTime,
+			u.loginErrNum,
+			u.lockTime,
+			u.safeQuestion,
+			u.safeAnswer
+		FROM
+			tbl_user u
+			ORDER  BY u.userId DESC limit #{start},#{len}
+    </select>
+	<select id="queryLimit" parameterType="com.san.platform.user.User" resultType="com.san.platform.limit.Limit">
+		select l.limitId,l.limitPath,l.limitLevel from tbl_limit l left join tbl_role r
+		on find_in_set(l.limitId,r.relLimitIdLv2) or
+		find_in_set(l.limitId,r.relLimitIdLv1) where r.roleId=(SELECT relRoleId FROM tbl_user where userName = #{userName}) order by l.limitLevel
+	</select>
+	<select id="queryUserModTimeByName" parameterType="com.san.platform.user.User" resultType="int">
+		SELECT count(1) from   tbl_user where  changePwdTime &gt; now() and userName = #{userName}
+	</select>
+	<select id="queryUserNameByName" parameterType="com.san.platform.user.User" resultType="int">
+		SELECT count(1) from   tbl_user where userName = #{userName}
+	</select>
+	<select id="queryLockTimeByName" parameterType="com.san.platform.user.User" resultType="int">
+		SELECT count(1) from   tbl_user where lockTime &gt; now() and userName = #{userName}
+	</select>
+	<select id="queryUserValidation" parameterType="com.san.platform.user.User" resultType="int">
+		SELECT count(1) from   tbl_user where userPwd = #{userPwd} and userName = #{userName}
+	</select>
+	<select id="querySafeQuestion" parameterType="com.san.platform.user.User" resultMap="User">
+		SELECT userName,loginErrNum,safeQuestion,safeAnswer from  tbl_user where  userName = #{userName}
+	</select>
+	<update id="updatePasswordByName" parameterType="com.san.platform.user.User">
+		UPDATE
+        tbl_user
+        SET
+
+            userPwd = #{userPwd}
+
+        where
+            userName = #{userName}
+	</update>
+	<update id="updateLoginErrNum" parameterType="com.san.platform.user.User">
+		UPDATE
+        tbl_user
+        SET
+            loginErrNum = #{loginErrNum}
+        where
+            userName = #{userName}
+	</update>
+	<update id="updateLockTimeByUser" parameterType="com.san.platform.user.User">
+		UPDATE
+        tbl_user
+        SET
+            lockTime = #{lockTime}
+        where
+            userName = #{userName}
+	</update>
+
+	<select id="queryUserNameByRoleName"
+			parameterType="com.san.platform.user.User"
+			resultType="com.san.platform.user.User">
+		SELECT
+		u.userId,
+		u.userName,
+		u.relName,
+		u.userPwd,
+		u.relRoleId,
+		u.userPhone,
+		u.userStatus,
+		u.userMemo,
+		u.userCreateTime,
+		u.userModTime,
+		u.isLock,
+		u.changePwdTime,
+		u.loginErrNum,
+		u.lockTime,
+		u.safeQuestion,
+		u.safeAnswer
+		FROM
+		tbl_user u
+		<where>
+			<if test="userName != null and userName != '' ">
+				AND u.userName = #{userName}
+			</if>
+		</where>
+	</select>
+
+</mapper>

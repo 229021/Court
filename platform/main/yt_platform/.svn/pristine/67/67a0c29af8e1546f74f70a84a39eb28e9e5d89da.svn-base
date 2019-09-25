@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.san.platform.track.mapper.TrackMapper">
+    <select id="queryTrackByPerId" resultType="Integer">
+        SELECT
+        TIMESTAMPDIFF(MINUTE,t.trackDate,Now())
+        FROM
+        tbl_track t
+        where t.trackPerId=#{trackPerId} order by trackDate desc limit 1
+    </select>
+    <select id="queryAllTrack" resultType="com.san.platform.trajectory.Trajectory">
+        select a.trackPerId,a.trackDate,d.deviceName,c.mapId,
+        a.trackFaceImageBig,c.mapRegion,b.deviceMapX mapX,b.deviceMapY mapY,c.mapImage
+        FROM tbl_track a inner join tbl_control b on a.trackDeviceId = b.conDeviceId
+				inner join tbl_device d on b.conDeviceId = d.deviceId
+        left JOIN tbl_map c on b.conMapId = c.mapId where a.trackPerId = #{trackId}
+    </select>
+
+    <!-- 去除重复mapId值拿到下一个mapId值 -->
+    <select id="queryAllTrackmapIdCk" resultType="com.san.platform.trajectory.Trajectory">
+          select a.trackPerId,a.trackDate,d.deviceName,c.mapId,
+        a.trackFaceImageBig,c.mapRegion,b.deviceMapX mapX,b.deviceMapY mapY,c.mapImage
+        FROM tbl_track a inner join tbl_control b on a.trackDeviceId = b.conDeviceId
+				inner join tbl_device d on b.conDeviceId = d.deviceId
+        left JOIN tbl_map c on b.conMapId = c.mapId where 1=1 and a.trackPerId = #{arg0} group by c.mapId
+    </select>
+
+    <!-- 查询轨迹之后获取MapId查询 -->
+    <select id="queryAllTrackmapId" resultType="com.san.platform.trajectory.Trajectory">
+        select a.trackPerId,a.trackDate,d.deviceName,c.mapId,
+        a.trackFaceImageBig,c.mapRegion,b.deviceMapX mapX,b.deviceMapY mapY,c.mapImage
+        FROM tbl_track a inner join tbl_control b on a.trackDeviceId = b.conDeviceId
+				inner join tbl_device d on b.conDeviceId = d.deviceId
+        left JOIN tbl_map c on b.conMapId = c.mapId where a.trackPerId = #{arg0} and c.mapId = #{arg1}
+    </select>
+
+    <select id="queryAllTrackByPic" resultType="com.san.platform.visitor.Visitor">
+        SELECT b.visitName,
+        b.visitId,
+        b.visitCardNumber,
+        b.visitSex,
+        a.trackDate,
+        a.trackFaceImageSmail bigSrc,
+        e.regionName,
+        f.deviceName,
+        b.visitCause from tbl_track a left join
+        tbl_visit b on a.trackPerId = b.visitId left join
+        tbl_control c on a.trackDeviceId = c.conDeviceId left join
+        tbl_device f on a.trackDeviceId = f.deviceId
+        left join tbl_map d on c.conMapId = d.mapId left join
+        tbl_region e on d.mapRegion = e.regionId
+        <where>
+            <if test="idNumber != null and idNumber != ''">
+                and b.visitCardNumber = #{idNumber}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and b.visitTime &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and b.visitTime &lt;= #{endTime}
+            </if>
+            <if test="visitCause != null and visitCause != ''">
+                and b.visitCause = #{visitCause}
+            </if>
+            <if test="regionId != 0 and regionId != ''">
+                and e.regionId = #{regionId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

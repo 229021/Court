@@ -1,0 +1,10 @@
+server.port=8089
+spring.thymeleaf.cache=false
+spring.thymeleaf.mode=LEGACYHTML5
+spring.dubbo.application.name=platform-web
+spring.dubbo.registry.protocol=zookeeper
+spring.dubbo.registry.address=192.168.100.102:2181
+spring.dubbo.base-package=com.san.platform
+spring.dubbo.protocol.name=dubbo
+spring.dubbo.consumer.timeout=10000
+spring.dubbo.consumer.check=false

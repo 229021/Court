@@ -1,0 +1,67 @@
+package com.san.platform.device.mapper;
+
+import com.san.platform.device.Device;
+import tk.mybatis.mapper.common.Mapper;
+import java.util.List;
+
+/**
+ * 通用mapper接口
+ */
+public interface DeviceMapper extends Mapper<Device> {
+
+    /**
+     * 查询所有设备信息----搜索查询 分页
+     * @param device
+     * @return
+     */
+    public List<Device> queryAllDevice(Device device);
+
+    /**
+     * 根据设备IP查询设备信息
+     * @param deviceIP
+     * @return
+     */
+    public Device queryDeviceByIP (String deviceIP);
+
+    /**
+     * 查询所有设备信息----简约查询
+     * @param device
+     * @return
+     */
+    public List<Device> queryAllDeviceCount(Device device);
+
+    /**
+     * 根据DeviceType查询设备name
+     * @param device
+     * @return
+     */
+    public List<Device> queryDeviceType (Device device);
+
+    /**
+     * 根据iD查询设备信息
+     * @param device
+     * @return
+     */
+    public Device queryDeviceById (Device device);
+
+    /**
+     * 筛选
+     * @param
+     * @return
+     */
+    public List<Device> queryDeviceIdNot (Device device);
+
+    /**
+     * 根据iD查询设备信息
+     * @param device
+     * @return
+     */
+    public Device queryDeviceByIdSQL (Device device);
+
+    /**
+     * 查询所有的闸机设备-type=1002,1003
+     * @return
+     */
+    public List<Device>queryDeviceByType();
+
+}
